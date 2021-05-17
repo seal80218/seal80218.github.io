@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>REST COUNTRIES</title>
+    <link rel="stylesheet" type="text/css"
+        href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script type="text/javascript"
+        src="https://rawgit.com/matfish2/vue-tables-2/master/dist/vue-tables-2.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.21.0/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.staticfile.org/vue-resource/1.5.1/vue-resource.min.js"></script>
+
+</head>
+
+<body>
+    <div id="app">
+        <h3>
+            REST COUNTRIES
+        </h3>
+        <div class="col-md-8 col-md-offset-2">
+            <div id="countries" v-cloak>
+                <v-client-table :data="tableData" :columns="columns" :options="options">
+                    <div slot="flag" slot-scope="props">
+                        <img :src="props.row.flag" style="display:block;width:33px;height:24px" />
+                    </div>
+                    <div slot="child_row" slot-scope="props">
+                        <div><b>topLevelDomain:</b> {{props.row.topLevelDomain}}</div>
+                        <div><b>capital:</b> {{props.row.capital}}</div>
+                        <div><b>region:</b> {{props.row.region}}</div>
+                        <div><b>subregion:</b> {{props.row.subregion}}</div>
+                        <div><b>population:</b> {{props.row.population}}</div>
+                        <div><b>latlng:</b> {{props.row.latlng}}</div>
+                        <div><b>demonym:</b> {{props.row.demonym}}</div>
+                        <div><b>area:</b> {{props.row.area}}</div>
+                        <div><b>gini:</b> {{props.row.gini}}</div>
+                        <div><b>timezones:</b> {{props.row.timezones}}</div>
+                        <div><b>borders:</b> {{props.row.borders}}</div>
+                        <div><b>numericCode:</b> {{props.row.numericCode}}</div>
+                        <div><b>currencies:</b> {{props.row.currencies}}</div>
+                        <div><b>languages:</b> {{props.row.languages}}</div>
+                        <div><b>translations:</b> {{props.row.translations}}</div>
+                        <div><b>regionalBlocs:</b> {{props.row.regionalBlocs}}</div>
+                        <div><b>cioc:</b> {{props.row.cioc}}</div>
+                    </div>
+                </v-client-table>
+            </div>
+        </div>
+    </div>
+    <script>
+        Vue.use(VueTables.ClientTable);
+
+        new Vue({
+            el: "#countries",
+            data: {
+                columns: ['flag', 'name', 'alpha2Code', 'alpha3Code', 'nativeName', 'altSpellings', 'callingCodes'],
+                tableData: [],
+                options: {
+                    uniqueKey: 'name',
+                    perPage: 25,
+                    perPageValues: [25],
+                    filterable: ['name'],
+                    orderBy: {
+                        column: "name",
+
+                    },
+                }
+            },
+            created() {
+                this.$http.get("https://restcountries.eu/rest/v2/all")
+                    .then(res => {
+                        this.tableData = res.data
+                    })
+            }
+        });
+
+    </script>
+    <style>
+        .VuePagination {
+            text-align: center;
+        }
+
+        .vue-title {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .vue-pagination-ad {
+            text-align: center;
+        }
+
+        .glyphicon.glyphicon-eye-open {
+            width: 16px;
+            display: block;
+            margin: 0 auto;
+        }
+
+        th:nth-child(3) {
+            text-align: center;
+        }
+
+        .VueTables__child-row-toggler {
+            width: 16px;
+            height: 16px;
+            line-height: 16px;
+            display: block;
+            margin: auto;
+            text-align: center;
+        }
+
+        .VueTables__child-row-toggler--closed::before {
+            content: "+";
+        }
+
+        .VueTables__child-row-toggler--open::before {
+            content: "-";
+        }
+
+        [v-cloak] {
+            display: none;
+        }
+
+        h3 {
+            text-align: center;
+        }
+    </style>
+</body>
+
+</html>
